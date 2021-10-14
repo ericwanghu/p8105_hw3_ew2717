@@ -7,6 +7,7 @@ output: github_document
 ```{r setup, eval = FALSE}
 
 library(tidyverse)
+library(p8105.datasets)
 
 knitr::opts_chunk$set(
   fig.width = 6,
@@ -25,3 +26,10 @@ scale_colour_discrete = scale_color_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 
 ```
+
+```{r load data}
+
+data("instacart")
+
+```
+

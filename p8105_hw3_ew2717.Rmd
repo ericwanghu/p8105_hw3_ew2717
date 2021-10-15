@@ -27,9 +27,25 @@ scale_fill_discrete = scale_fill_viridis_d
 
 ```
 
-```{r load data}
+## PROBLEM 1
+
+#### Loading instacart dataset
+
+```{r load instacard data}
 
 data("instacart")
 
-```
+instacart_df <- 
+  instacart %>% 
+  janitor::clean_names()
 
+```
+### Instacard data exploration 
+
+```{r intsacart data exploration}
+
+instacart_rows = instacart_df %>% nrow()
+instacart_cols = instacart_df %>% ncol()
+instacart_names = instacart_df %>% names()
+
+```

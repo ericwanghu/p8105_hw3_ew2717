@@ -124,5 +124,24 @@ knitr::kable(popular_table)
 
 ```
 
+## PROBLEM 2 
+
+### Loading BRFSS dataset from p8105.datasets 
+
+```{r load brfss data}
+
+data("brfss_smart2010")
+
+```
+
+### Cleaning brfss data set 
+
+```{r clean brfss data set}
+
+brfss_df = 
+  brfss_smart2010 %>% 
+  janitor::clean_names() 
+
+```
 
 

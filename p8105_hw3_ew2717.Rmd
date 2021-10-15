@@ -8,44 +8,17 @@ output: github_document
 
 library(tidyverse)
 library(p8105.datasets)
-
 knitr::opts_chunk$set(
   fig.width = 6,
   fig.asp = 0.6,
   out.width = "90%"
 )
-
 theme_set(theme_minimal() + theme(legend.position = "botton"))
-
 options(
   ggplot2.continuous.colour = "viridis",
   ggplot2.continuous.fill = "viridis"
 )
-
 scale_colour_discrete = scale_color_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
-
-```
-
-## PROBLEM 1
-
-#### Loading instacart dataset
-
-```{r load instacard data}
-
-data("instacart")
-
-instacart_df <- 
-  instacart %>% 
-  janitor::clean_names()
-
-```
-### Instacard data exploration 
-
-```{r intsacart data exploration}
-
-instacart_rows = instacart_df %>% nrow()
-instacart_cols = instacart_df %>% ncol()
-instacart_names = instacart_df %>% names()
 
 ```

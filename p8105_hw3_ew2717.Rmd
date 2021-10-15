@@ -11,22 +11,23 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-```{r}
+```{r setup two}
 
 library(tidyverse)
-library(patchwork)
 library(p8105.datasets)
 
 knitr::opts_chunk$set(
   fig.width = 6,
   fig.asp = 0.6,
-  out.width = "90%"
+  out.width = "100%"
 )
+
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
 options(
   ggplot2.continuous.colour = "viridis",
   ggplot2.continuous.fill = "viridis"
 )
+
 scale_colour_discrete = scale_color_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 
@@ -46,25 +47,65 @@ instacart_df <-
 
 ```
 
-## PROBLEM 1
+#### Instacard data exploration 
 
-#### Loading instacart dataset
+###### Finding rows, columns, and key variables.
 
-```{r load instacard data}
-data("instacart")
-instacart_df <- 
-  instacart %>% 
-  janitor::clean_names()
-```
-### Instacard data exploration 
+```{r intstacart rows cols names}
 
-```{r intstacart data exploration}
-
-instacart_rows = instacart_df %>% nrow()
-instacart_cols = instacart_df %>% ncol()
-instacart_names = instacart_df %>% names()
+instacart_rows = instacart_df %>% 
+  nrow()
+instacart_cols = instacart_df %>% 
+  ncol()
+instacart_names = instacart_df %>% 
+  names()
 
 ```
 
 The number of rows in the instacart data set is **`r instacart_rows`**. The number of columns in the instacart data set is **`r instacart_cols`**. The key variables in the instacart data set are **`r instacart_names`**.
+
+###### Finding how many aisles there are and which aisles are the most items ordered from
+
+```{r instacart aisles}
+
+instacart_aisles = 
+  instacart_df %>% 
+  group_by(aisle) %>% 
+  summarize(n_obs = n()) %>% 
+  arrange(desc(n_obs))
+
+instacart_aisles
+
+```
+
+As seen above, there are 134 aisles, and the aisles that have the most items ordered from are the "fresh vegetables", "fresh fruits", "packaged vegetable fruits", "yogurt", and "packaged cheese". 
+
+
+#### Creating a table showing the three most popular items in each of the aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits”, including the number of times each item is ordered
+
+```{r aisle table}
+
+aisle_table = 
+  instacart_df %>% 
+  group_by(aisle) %>% 
+  summarize(item_count = n()) %>% 
+  filter(item_count > 10000) %>% 
+  ggplot(aes(x = reorder(aisle, item_count), y = item_count)) +
+  geom_bar(stat = "identity") +
+  labs(
+    title = "Items ordered per Aisle",
+    x = "Aisle",
+    y = "# of Items",
+    caption = "Figure 1. The table depicts the number of items ordered per aisle (>10000 items)."
+  ) +
+  coord_flip() +
+  theme(axis.text.y = element_text(size = 6))
+
+aisle_table
+
+```
+
+
+
+
 

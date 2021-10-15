@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
   out.width = "100%"
 )
 
-theme_set(theme_minimal() + theme(legend.position = "bottom"))
+theme_set(theme_bw() + theme(legend.position = "bottom"))
 options(
   ggplot2.continuous.colour = "viridis",
   ggplot2.continuous.fill = "viridis"
@@ -47,7 +47,7 @@ instacart_df <-
 
 ```
 
-#### Instacard data exploration 
+#### Instacart data exploration 
 
 ###### Finding rows, columns, and key variables.
 
@@ -81,7 +81,7 @@ instacart_aisles
 As seen above, there are 134 aisles, and the aisles that have the most items ordered from are the "fresh vegetables", "fresh fruits", "packaged vegetable fruits", "yogurt", and "packaged cheese". 
 
 
-#### Creating a table showing the three most popular items in each of the aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits”, including the number of times each item is ordered
+###### Creating a table showing the three most popular items in each of the aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits”, including the number of times each item is ordered
 
 ```{r aisle table}
 
@@ -105,7 +105,24 @@ aisle_table
 
 ```
 
+###### Making a table showing the three most popular items in each of the aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits", including the number of times each item is ordered
 
+
+### Table of three most popular items in each of the aisles "baking ingredients", "dog food care", "packaged vegetables fruits"
+
+```{r popular_items_table, message = FALSE, warning = FALSE}
+
+popular_table = 
+  instacart_df %>% 
+  filter(aisle %in% c("baking ingredients", "dog food care", "packaged vegetables fruits")) %>% 
+  group_by(aisle, product_name) %>% 
+  summarize(item_count = n()) %>% 
+  filter(min_rank(desc(item_count)) < 4) %>% 
+  arrange(desc(item_count)) 
+  
+knitr::kable(popular_table)
+
+```
 
 
 

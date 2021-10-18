@@ -126,7 +126,7 @@ knitr::kable(popular_table)
 
 ## PROBLEM 2 
 
-### Loading BRFSS dataset from p8105.datasets 
+#### Loading BRFSS dataset from p8105.datasets 
 
 ```{r load brfss data}
 
@@ -134,14 +134,64 @@ data("brfss_smart2010")
 
 ```
 
-### Cleaning brfss data set 
+#### Cleaning brfss data set 
 
 ```{r clean brfss data set}
 
-brfss_df = 
-  brfss_smart2010 %>% 
-  janitor::clean_names() 
+brfss_df = brfss_smart2010 %>% 
+  janitor::clean_names() %>% 
+  filter(
+  topic == "Overall Health",
+  response %in% c("Poor", "Fair", "Good", "Very good", "Excellent")) %>% 
+  mutate(response = as.factor(response), response = ordered(response, levels = c("Poor", "Fair", "Good", "Very good", "Excellent"))) %>% 
+  select(year, locationdesc, topic, response, data_value, sample_size) %>%
+  separate(locationdesc, into = c("State", "County"), sep = " - ")
 
 ```
 
+###### Finding which states were observed at 7 or more locations in 2002 and 2010
+
+```{r}
+
+brfss_df_02 = 
+  brfss_df %>% 
+  group_by(State) %>% 
+  filter(year == "2002") %>%
+  distinct(County) %>%
+  count(State) %>% 
+  filter(n >= 7) %>% 
+  arrange(n)
+
+brfss_df_10 = 
+  brfss_df %>% 
+  group_by(State) %>% 
+  filter(year == "2010") %>%
+  distinct(County) %>%
+  count(State) %>% 
+  filter(n >= 7) %>% 
+  arrange(n)
+
+knitr::kable(brfss_df_02)
+knitr::kable(brfss_df_10)
+
+```
+
+
+As the tables depict, CT, FL, NC, MA, NJ, and PA were observed at 7 or more locations in 2002, and CA, CO, FL, MA, MD, NC, NE, NJ, NY, OH, PA, SC, TX, and WA were observed at 7 or more locations in 2010.
+
+###### Constructing a dataset that is limited to Excellent responses, and contains, year, state, and a variable that averages the data_value across locations within a state. 
+
+```{r}
+
+
+
+```
+
+###### Making a spaghetti plot of this average value over time within a state=
+
+```{r}
+
+
+
+```
 

@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-```{r setup two}
+```{r setup two, include = FALSE}
 
 library(tidyverse)
 library(p8105.datasets)
@@ -234,7 +234,7 @@ labs(
 
 ## Problem 3
 
-*Loading original accel data set*
+*Loading accelerometer data set*
 
 ```{r}
 

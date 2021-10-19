@@ -35,7 +35,7 @@ scale_fill_discrete = scale_fill_viridis_d
 
 ## Problem 1
 
-#### Loading instacart data
+*Loading instacart data*
 
 ```{r}
 
@@ -49,7 +49,7 @@ instacart_df <-
 
 #### Instacart data exploration 
 
-###### Finding rows, columns, and key variables.
+*Finding rows, columns, and key variables*
 
 ```{r intstacart rows cols names}
 
@@ -64,7 +64,7 @@ instacart_names = instacart_df %>%
 
 The number of rows in the instacart data set is **`r instacart_rows`**. The number of columns in the instacart data set is **`r instacart_cols`**. The key variables in the instacart data set are **`r instacart_names`**.
 
-###### Finding how many aisles there are and which aisles are the most items ordered from
+*Finding how many aisles there are and which aisles are the most items ordered from*
 
 ```{r instacart aisles}
 
@@ -81,7 +81,7 @@ instacart_aisles
 As seen above, there are 134 aisles, and the aisles that have the most items ordered from are the "fresh vegetables", "fresh fruits", "packaged vegetable fruits", "yogurt", and "packaged cheese". 
 
 
-###### Creating a table showing the three most popular items in each of the aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits”, including the number of times each item is ordered
+*Creating a table showing the three most popular items in each of the aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits”, including the number of times each item is ordered*
 
 ```{r aisle table}
 
@@ -106,10 +106,7 @@ aisle_table
 
 ```
 
-###### Making a table showing the three most popular items in each of the aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits", including the number of times each item is ordered
-
-
-### Table of three most popular items in each of the aisles "baking ingredients", "dog food care", "packaged vegetables fruits"
+*Making a table showing the three most popular items in each of the aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits", including the number of times each item is ordered*
 
 ```{r popular_items_table, message = FALSE, warning = FALSE}
 
@@ -127,7 +124,7 @@ knitr::kable(popular_table)
 
 ## PROBLEM 2 
 
-#### Loading BRFSS dataset from p8105.datasets 
+*Loading BRFSS dataset*
 
 ```{r load brfss data}
 
@@ -135,7 +132,7 @@ data("brfss_smart2010")
 
 ```
 
-#### Cleaning brfss data set 
+*Cleaning brfss data set*
 
 ```{r clean brfss data set}
 
@@ -151,7 +148,7 @@ brfss_df <-
 
 ```
 
-###### Finding which states were observed at 7 or more locations in 2002 and 2010
+*Finding which states were observed at 7 or more locations in 2002 and 2010*
 
 ```{r observed 7 or more}
 
@@ -180,7 +177,7 @@ knitr::kable(brfss_df_10)
 
 As the tables depict, CT, FL, NC, MA, NJ, and PA were observed at 7 or more locations in 2002, and CA, CO, FL, MA, MD, NC, NE, NJ, NY, OH, PA, SC, TX, and WA were observed at 7 or more locations in 2010.
 
-###### Constructing a dataset that is limited to Excellent responses, and contains, year, state, and a variable that averages the data_value across locations within a state. 
+*Constructing a dataset that is limited to Excellent responses, and contains, year, state, and a variable that averages the data_value across locations within a state* 
 
 ```{r excellent dataset}
 
@@ -194,7 +191,7 @@ brfss_excellent_df <-
 
 ```
 
-###### Making a spaghetti plot of this average value over time within a state
+*Making a spaghetti plot of this average value over time within a state*
 
 ```{r spaghetti plot, warning = FALSE, message = FALSE}
 
@@ -215,7 +212,9 @@ brfss_df %>%
 
 ```
 
-###### Making a two-panel plot showing the distribution of data_value for responses among locations in NY State for the years 2006 and 2010 
+This spaghetti plot shows that the average data_value across locations within states seem to cary greatly every single year, from 2002 to 2010.
+
+*Making a two-panel plot showing the distribution of data_value for responses among locations in NY State for the years 2006 and 2010*
 
 ```{r two panel plot}
 
@@ -235,7 +234,7 @@ labs(
 
 ## Problem 3
 
-###### Loading the original data set 
+*Loading original accel data set*
 
 ```{r}
 
@@ -245,7 +244,7 @@ accel_df <-
 
 ```
 
-###### Tidying data set 
+*Tidying data set*
 
 ```{r}
 
@@ -269,7 +268,7 @@ accel_tidy <-
 
 ```
  
-###### Analyzing accelerometer data
+*Analyzing accelerometer data*
 
 ```{r}
 
@@ -286,7 +285,7 @@ accel_cols = accel_tidy %>%
 
 This data set was tidied, and we found that its key variables are **`r accel_var`**. Additionally, the dimensions are **`r accel_dim`**, the number of columns are **`r accel_cols`**, and the number of rows are **`r accel_rows`**. 
 
-###### Creating a table that shows total activity count for each day of the week
+*Creating a table that shows total activity count for each day of the week*
 
 ```{r}
 
@@ -299,9 +298,9 @@ accel_tidy %>%
 
 ```
 
-One apparent trend seen from the table is that activity count is noticeably higher towards the end of the week, from Wednesday to Friday. Saturday can be assumed to be a rest day, as it is significantly lower in total activity compared to the rest of the days. 
+One apparent trend seen from the table is that activity count is noticeably higher towards the end of the week, from Wednesday to Friday. Additionally, Saturday can be assumed to be a rest day, as it is significantly lower in total activity compared to the rest of the days. 
 
-###### Making a single-panel plot that depicts 24-hour activity time courses for every day
+*Making a single-panel plot that depicts 24-hour activity time courses for every day*
 
 ```{r}
 
@@ -312,7 +311,7 @@ accel_tidy %>%
              color = day)) +
   geom_point() +
   labs(
-    title = "24-hour Activity Time per Day",
+    title = "24-Hour Activity Time per Day",
     x = "Hour in the Day",
     y = "Activity Count",
     caption = "Figure 3. The following data is from  Columbia University Medical Center") + 

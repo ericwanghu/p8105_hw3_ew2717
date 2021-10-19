@@ -19,7 +19,7 @@ library(p8105.datasets)
 knitr::opts_chunk$set(
   fig.width = 6,
   fig.asp = 0.6,
-  out.width = "100%"
+  out.width = "90%"
 )
 
 theme_set(theme_bw() + theme(legend.position = "bottom"))
@@ -68,7 +68,7 @@ The number of rows in the instacart data set is **`r instacart_rows`**. The numb
 
 ```{r instacart aisles}
 
-instacart_aisles = 
+instacart_aisles <- 
   instacart_df %>% 
   group_by(aisle) %>% 
   summarize(n_obs = n()) %>% 
@@ -85,12 +85,13 @@ As seen above, there are 134 aisles, and the aisles that have the most items ord
 
 ```{r aisle table}
 
-aisle_table = 
+aisle_table <- 
   instacart_df %>% 
   group_by(aisle) %>% 
   summarize(item_count = n()) %>% 
   filter(item_count > 10000) %>% 
-  ggplot(aes(x = reorder(aisle, item_count), y = item_count)) +
+  ggplot(aes(x = reorder(aisle, item_count), 
+             y = item_count)) +
   geom_bar(stat = "identity") +
   labs(
     title = "Items ordered per Aisle",
@@ -112,7 +113,7 @@ aisle_table
 
 ```{r popular_items_table, message = FALSE, warning = FALSE}
 
-popular_table = 
+popular_table <- 
   instacart_df %>% 
   filter(aisle %in% c("baking ingredients", "dog food care", "packaged vegetables fruits")) %>% 
   group_by(aisle, product_name) %>% 
@@ -138,7 +139,8 @@ data("brfss_smart2010")
 
 ```{r clean brfss data set}
 
-brfss_df = brfss_smart2010 %>% 
+brfss_df <- 
+  brfss_smart2010 %>% 
   janitor::clean_names() %>% 
   filter(
   topic == "Overall Health",
@@ -153,7 +155,7 @@ brfss_df = brfss_smart2010 %>%
 
 ```{r observed 7 or more}
 
-brfss_df_02 = 
+brfss_df_02 <- 
   brfss_df %>% 
   group_by(State) %>% 
   filter(year == "2002") %>%
@@ -162,7 +164,7 @@ brfss_df_02 =
   filter(n >= 7) %>% 
   arrange(n)
 
-brfss_df_10 = 
+brfss_df_10 <- 
   brfss_df %>% 
   group_by(State) %>% 
   filter(year == "2010") %>%
@@ -182,7 +184,7 @@ As the tables depict, CT, FL, NC, MA, NJ, and PA were observed at 7 or more loca
 
 ```{r excellent dataset}
 
-brfss_excellent_df = 
+brfss_excellent_df <-
   brfss_df %>%
   filter(response == "Excellent") %>% 
   group_by(State, year) %>% 
@@ -190,7 +192,136 @@ brfss_excellent_df =
          avg_data_value = round(avg_data_value, digits = 4)) %>%
   select(year, State, avg_data_value) 
 
-brfss_excellent_df
 ```
 
+###### Making a spaghetti plot of this average value over time within a state
 
+```{r spaghetti plot, warning = FALSE, message = FALSE}
+
+brfss_df %>% 
+  filter(response == "Excellent") %>% 
+  group_by(year, State) %>%
+  summarize(mean_value = mean(data_value), na.rm = TRUE) %>% 
+  ggplot(aes(x = year, 
+             y = mean_value, 
+             group = State, 
+             color = State)) +
+  geom_line() +
+  labs(
+    title = "Average Value over Time per State",
+    x = "Year",
+    y = "Average Value") +
+  theme(legend.position = "right")
+
+```
+
+###### Making a two-panel plot showing the distribution of data_value for responses among locations in NY State for the years 2006 and 2010 
+
+```{r two panel plot}
+
+brfss_df %>%
+  filter(year == "2006" | year == "2010",
+         State == "NY") %>% 
+  ggplot(aes(x = response, y = data_value, color = response)) +
+  geom_boxplot() +
+  facet_grid(. ~ year) +
+labs(
+    title = "NY Distribution of data values for 2006 and 2010, by Responses",
+    x = "Response",
+    y = "Data Value"
+  )
+
+```
+
+## Problem 3
+
+###### Loading the original data set 
+
+```{r}
+
+accel_df <- 
+  read_csv("./data/accel_data.csv") %>%
+  janitor::clean_names() 
+
+```
+
+###### Tidying data set 
+
+```{r}
+
+accel_tidy <-
+  accel_df %>%
+  pivot_longer(
+    activity_1:activity_1440,
+    names_to = "minute",
+    names_prefix = "activity_",
+    values_to = "activity_count") %>%
+  mutate(
+    week = as.integer(week), 
+    day_id = as.integer(day_id), 
+    minute = as.integer(minute),
+    hour = as.integer(minute %/% 60), 
+    day = factor(day, levels = c("Sunday","Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")),
+    weekday_vs_weekend = 
+      case_when(
+           day %in% c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday") ~ "Weekday", 
+           day %in% c("Saturday", "Sunday") ~ "Weekend")) 
+
+```
+ 
+###### Analyzing accelerometer data
+
+```{r}
+
+accel_var = accel_tidy %>% 
+  names()
+accel_dim = accel_tidy %>% 
+  dim()
+accel_rows = accel_tidy %>% 
+  nrow()
+accel_cols = accel_tidy %>% 
+  ncol()
+
+```
+
+This data set was tidied, and we found that its key variables are **`r accel_var`**. Additionally, the dimensions are **`r accel_dim`**, the number of columns are **`r accel_cols`**, and the number of rows are **`r accel_rows`**. 
+
+###### Creating a table that shows total activity count for each day of the week
+
+```{r}
+
+accel_tidy %>%
+  group_by(day) %>%
+  summarize(total_activity = sum(activity_count, na.rm = TRUE)) %>%
+  knitr::kable(caption = 
+      "Figure 2. Total Activity Count per Day"
+  )
+
+```
+
+One apparent trend seen from the table is that activity count is noticeably higher towards the end of the week, from Wednesday to Friday. Saturday can be assumed to be a rest day, as it is significantly lower in total activity compared to the rest of the days. 
+
+###### Making a single-panel plot that depicts 24-hour activity time courses for every day
+
+```{r}
+
+accel_tidy %>%
+  group_by(day, minute) %>%
+  ggplot(aes(x = minute, 
+             y = activity_count, 
+             color = day)) +
+  geom_point() +
+  labs(
+    title = "24-hour Activity Time per Day",
+    x = "Hour in the Day",
+    y = "Activity Count",
+    caption = "Figure 3. The following data is from  Columbia University Medical Center") + 
+  scale_x_continuous(
+    breaks = c(0, 240, 480, 720, 960, 1200, 1440),
+    labels = c("0 hr", "4 hr", "8 hr", "12 hr", "16 hr", "20 hr", "24 hr"))
+
+```
+
+This accelerometer data set is tidied. It shows five weeks of data for one person.
+
+Based on this plot, we can see that activity count is higher later on throughout the day during weekdays. On the weekends, however, we can see that activity count is actually higher throughout the middle of the day. 
